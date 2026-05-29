@@ -4,8 +4,42 @@ import { projects } from './data/projects.js'
 // 1. ASSET STRINGS ENGINE VIA VITE COMPILER MACROS
 import navbarHTML from './sections/navbar.html?raw'
 import homeHTML from './sections/home.html?raw'
-// import aboutHTML from './sections/about.html?raw'
-// import contactHTML from './sections/contact.html?raw'
+import aboutHTML from './sections/about.html?raw'
+import contactHTML from './sections/contact.html?raw'
+
+/**
+ * Dynamically computes and updates the project counter badges based on projects.js
+ */
+function updateCategoryBadges() {
+  // 1. Calculate and set total count
+  const totalCount = projects.length;
+  const totalBadge = document.querySelector('[data-count-badge="all"]');
+  if (totalBadge) totalBadge.textContent = totalCount;
+
+  // 2. Scan all existing tab buttons to pull their filtering keys automatically
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  
+  tabButtons.forEach(button => {
+    const category = button.getAttribute('data-filter');
+    if (category === 'all') return; // Skip total as it's already handled
+
+    // Count how many projects match this button's data-filter value
+    const matchingCount = projects.filter(project => project.category === category).length;
+    
+    // Find the inner numeric badge container
+    const badge = button.querySelector('[data-count-badge]');
+    if (badge) {
+      badge.textContent = matchingCount;
+      
+      // Visual polish: dim the badge color state slightly if empty
+      if (matchingCount === 0) {
+        badge.classList.replace('text-slate-500', 'text-slate-600/40');
+      } else {
+        badge.classList.replace('text-slate-600/40', 'text-slate-500');
+      }
+    }
+  });
+}
 
 /**
  * Injects HTML components synchronously into layout hooks
@@ -14,8 +48,8 @@ function loadLayoutArchitecture() {
   const blueprint = {
     '#navbar-container': navbarHTML,
     '#home-section': homeHTML,
-    // '#about-section': aboutHTML,
-    // '#contact-section': contactHTML
+    '#about-section': aboutHTML,
+    '#contact-section': contactHTML
   };
 
   for (const [selector, rawHTML] of Object.entries(blueprint)) {
@@ -249,6 +283,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // 2. Render layout content cards cleanly inside structural framework nodes
   renderProjects();
   
+  // 🔥 NEW STAGE: Compute your filter metrics counters dynamically!
+  updateCategoryBadges();
+
   // 3. Bind dynamic interactive controls safely to active nodes
   initMobileMenu();
 
