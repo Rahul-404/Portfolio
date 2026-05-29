@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Custom CSS properties for Active Tab Masking States */
+.tab-active-gradient {
+  background: conic-gradient(from 0deg, #a855f7 0%, #3b82f6 50%, #a855f7 100%) !important;
+}
+
+/* Hide standard scrollbars while maintaining gesture physics */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
