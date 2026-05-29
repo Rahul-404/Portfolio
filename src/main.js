@@ -11,27 +11,21 @@ import contactHTML from './sections/contact.html?raw'
  * Dynamically computes and updates the project counter badges based on projects.js
  */
 function updateCategoryBadges() {
-  // 1. Calculate and set total count
   const totalCount = projects.length;
   const totalBadge = document.querySelector('[data-count-badge="all"]');
   if (totalBadge) totalBadge.textContent = totalCount;
 
-  // 2. Scan all existing tab buttons to pull their filtering keys automatically
   const tabButtons = document.querySelectorAll('.tab-btn');
   
   tabButtons.forEach(button => {
     const category = button.getAttribute('data-filter');
-    if (category === 'all') return; // Skip total as it's already handled
+    if (category === 'all') return;
 
-    // Count how many projects match this button's data-filter value
     const matchingCount = projects.filter(project => project.category === category).length;
-    
-    // Find the inner numeric badge container
     const badge = button.querySelector('[data-count-badge]');
     if (badge) {
       badge.textContent = matchingCount;
       
-      // Visual polish: dim the badge color state slightly if empty
       if (matchingCount === 0) {
         badge.classList.replace('text-slate-500', 'text-slate-600/40');
       } else {
@@ -227,7 +221,6 @@ function initMobileMenu() {
     }
   });
 
-  // Close mobile menu gracefully when clicking any nav link
   document.querySelectorAll('#menu-links a').forEach(link => {
     link.addEventListener('click', () => {
       if (!menuLinks.classList.contains('hidden')) {
@@ -274,22 +267,26 @@ window.filterCategory = function(selectedButton, categoryKey) {
 }
 
 /**
- * Master Application Lifecycle Initializer Hook
+ * Master Application Lifecycle Execution Pipeline
+ * Runs instantly because ES Modules evaluate safely after DOM rendering.
  */
-document.addEventListener("DOMContentLoaded", () => {
-  // 1. First build layout container architecture pieces
+function initApplication() {
+  // 1. Build layout container structures
   loadLayoutArchitecture();
   
-  // 2. Render layout content cards cleanly inside structural framework nodes
+  // 2. Render layout content cards
   renderProjects();
   
-  // 🔥 NEW STAGE: Compute your filter metrics counters dynamically!
+  // 3. Compute dynamic metric tracking counter badges
   updateCategoryBadges();
 
-  // 3. Bind dynamic interactive controls safely to active nodes
+  // 4. Bind interactive nav menus
   initMobileMenu();
 
-  // 4. Set initial active filter styling state
+  // 5. Initialize layout defaults
   const allButton = document.querySelector('[data-filter="all"]');
   if (allButton) allButton.classList.add('tab-active-gradient');
-});
+}
+
+// Fire application instantly
+initApplication();
